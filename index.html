@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FinFlow — Finance Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ── Sidebar ─────────────────────────────────── -->
+  <aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-brand">
+      <div class="brand-mark">F</div>
+      <span class="brand-name">FinFlow</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-link active" data-page="overview">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Overview
+      </a>
+      <a class="nav-link" data-page="transactions">
+        <svg viewBox="0 0 24 24"><path d="M2 7h20M2 12h14M2 17h9"/><polyline points="18 14 21 17 18 20"/></svg>
+        Transactions
+        <span class="nav-pill" id="tx-pill">0</span>
+      </a>
+      <a class="nav-link" data-page="insights">
+        <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Insights
+      </a>
+    </nav>
+
+    <div class="sidebar-divider"></div>
+
+    <button class="sidebar-action" id="export-btn">
+      <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Export CSV
+    </button>
+
+    <div class="sidebar-user">
+      <div class="user-avatar" id="user-avatar">AK</div>
+      <div class="user-meta">
+        <p class="user-name" id="user-name">Alex Kumar</p>
+        <p class="user-role" id="user-role">Admin</p>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ── Main ────────────────────────────────────── -->
+  <div class="main-wrapper">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <button class="menu-btn" id="menu-btn" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="topbar-heading">
+        <h1 id="page-heading">Overview</h1>
+        <p id="page-sub">Financial Summary</p>
+      </div>
+      <div class="topbar-right">
+        <select class="role-dropdown" id="role-select">
+          <option value="admin">Admin</option>
+          <option value="viewer">Viewer</option>
+        </select>
+        <button class="theme-btn" id="theme-btn" aria-label="Toggle theme">
+          <svg id="theme-icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/></svg>
+          <svg id="theme-icon-sun" viewBox="0 0 24 24" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- ── Page: Overview ───────────────────────── -->
+    <section class="page active" id="page-overview">
+
+      <div class="summary-cards" id="summary-cards">
+        <div class="card card--balance">
+          <p class="card-label">Total Balance</p>
+          <h2 class="card-value" id="card-balance">₹0</h2>
+          <span class="card-badge" id="badge-balance">+0%</span>
+        </div>
+        <div class="card card--income">
+          <p class="card-label">Total Income</p>
+          <h2 class="card-value" id="card-income">₹0</h2>
+          <span class="card-badge card-badge--up" id="badge-income">+0%</span>
+        </div>
+        <div class="card card--expense">
+          <p class="card-label">Total Expenses</p>
+          <h2 class="card-value" id="card-expense">₹0</h2>
+          <span class="card-badge card-badge--down" id="badge-expense">+0%</span>
+        </div>
+        <div class="card card--savings">
+          <p class="card-label">Savings Rate</p>
+          <h2 class="card-value" id="card-savings">0%</h2>
+          <span class="card-badge" id="badge-savings">—</span>
+        </div>
+      </div>
+
+      <div class="charts-row">
+        <div class="chart-box">
+          <div class="chart-box-header">
+            <div>
+              <h3>Cash Flow</h3>
+              <p>Income vs Expenses — Last 6 months</p>
+            </div>
+            <div class="chart-legend">
+              <span class="legend-dot legend-dot--income"></span> Income
+              <span class="legend-dot legend-dot--expense"></span> Expenses
+            </div>
+          </div>
+          <canvas id="line-chart"></canvas>
+        </div>
+        <div class="chart-box">
+          <div class="chart-box-header">
+            <div>
+              <h3>Spending</h3>
+              <p>By category</p>
+            </div>
+          </div>
+          <canvas id="donut-chart"></canvas>
+          <div class="donut-legend" id="donut-legend"></div>
+        </div>
+      </div>
+
+      <div class="section-row">
+        <h3 class="section-title">Recent Transactions</h3>
+        <button class="link-btn" data-page="transactions">View all →</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th><th>Description</th><th>Category</th><th>Type</th><th>Amount</th>
+            </tr>
+          </thead>
+          <tbody id="recent-body"></tbody>
+        </table>
+      </div>
+
+    </section>
+
+    <!-- ── Page: Transactions ────────────────────── -->
+    <section class="page" id="page-transactions">
+
+      <div class="tx-toolbar">
+        <input class="search-input" id="search" type="text" placeholder="Search transactions…" />
+        <div class="filter-group">
+          <select id="filter-type"><option value="">All Types</option><option value="income">Income</option><option value="expense">Expense</option></select>
+          <select id="filter-cat"><option value="">All Categories</option></select>
+          <select id="filter-month"><option value="">All Months</option></select>
+          <button class="btn-ghost" id="clear-filters">Clear</button>
+        </div>
+        <button class="btn-primary admin-only" id="add-btn">+ Add</button>
+      </div>
+
+      <div class="table-wrap">
+        <table id="tx-table">
+          <thead>
+            <tr>
+              <th data-sort="date">Date <span class="sort-arrow">↕</span></th>
+              <th data-sort="desc">Description <span class="sort-arrow">↕</span></th>
+              <th>Category</th>
+              <th>Type</th>
+              <th data-sort="amount">Amount <span class="sort-arrow">↕</span></th>
+              <th class="admin-only">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="tx-body"></tbody>
+        </table>
+        <div class="empty-state" id="tx-empty" style="display:none">
+          <p>No transactions match your filters.</p>
+        </div>
+        <div class="table-footer">
+          <span id="tx-count-label">—</span>
+          <span id="tx-totals">—</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ── Page: Insights ────────────────────────── -->
+    <section class="page" id="page-insights">
+
+      <div class="insight-cards" id="insight-cards"></div>
+
+      <div class="section-row" style="margin-top: 32px;">
+        <h3 class="section-title">Monthly Breakdown</h3>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Month</th><th>Income</th><th>Expenses</th><th>Net</th><th>Savings</th></tr>
+          </thead>
+          <tbody id="monthly-body"></tbody>
+        </table>
+      </div>
+
+      <div class="section-row" style="margin-top: 32px;">
+        <h3 class="section-title">Category Spending</h3>
+      </div>
+      <div class="card" style="padding: 24px;" id="cat-bars"></div>
+
+    </section>
+
+  </div>
+
+  <!-- ── Modal ──────────────────────────────────── -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-head">
+        <h3 id="modal-title">Add Transaction</h3>
+        <button class="modal-close" id="modal-close">✕</button>
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <label>Description</label>
+          <input type="text" id="f-desc" placeholder="e.g. Grocery run" />
+        </div>
+        <div class="form-field">
+          <label>Amount (₹)</label>
+          <input type="number" id="f-amount" placeholder="0.00" min="0" step="0.01" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <label>Type</label>
+          <select id="f-type">
+            <option value="expense">Expense</option>
+            <option value="income">Income</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Category</label>
+          <select id="f-cat">
+            <option value="Food">Food</option>
+            <option value="Transport">Transport</option>
+            <option value="Shopping">Shopping</option>
+            <option value="Housing">Housing</option>
+            <option value="Healthcare">Healthcare</option>
+            <option value="Entertainment">Entertainment</option>
+            <option value="Salary">Salary</option>
+            <option value="Freelance">Freelance</option>
+            <option value="Investment">Investment</option>
+            <option value="Utilities">Utilities</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-field">
+        <label>Date</label>
+        <input type="date" id="f-date" />
+      </div>
+      <div class="modal-footer">
+        <button class="btn-ghost" id="modal-cancel">Cancel</button>
+        <button class="btn-primary" id="modal-save">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Toast ──────────────────────────────────── -->
+  <div class="toast-stack" id="toast-stack"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
